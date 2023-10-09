@@ -10,8 +10,9 @@ return {
   status_symbols = {
     clean = '✔',
     unclean = '✘',
-    unpushed = '',
+    unpushed = '⬆︎',
     bare = '',
+    unpulled = '⬇︎',
   },
 
   -- settings specific to the picker
