@@ -6,6 +6,7 @@ local summary = {
   clean = 0,
   bare = 0,
   unpushed = 0,
+  unpulled = 0,
 }
 
 local get_summary = function()

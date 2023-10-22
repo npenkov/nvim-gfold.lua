@@ -1,33 +1,65 @@
 # nvim-gfold.lua
 
-`nvim` plugin for [gfold](https://github.com/nickgerace/gfold) currently providing:
-* A picker to change `cwd`.
+`nvim` plugin for [gfold](https://github.com/npenkov/gfold) currently providing:
+
+- A picker to change `cwd`.
   This uses `vim.ui.select`.
   To have a nice ui for example [dressing.nvim](https://github.com/stevearc/dressing.nvim) can be used.
-* A function to get a summary that can be used in statuslines, eg [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim).
+- A function to get a summary that can be used in statuslines, eg [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim).
 
 ## Pictures
+
 ### Picker
 
-![gscreenshot_2022-02-25-095346](https://user-images.githubusercontent.com/23341710/155687823-947535c8-e271-4e8f-a924-be2b7bc29708.png)
+![screenshot](doc/screenshot.png)
 
 ### Statusline
 
 ![gscreenshot_2022-02-26-140848](https://user-images.githubusercontent.com/23341710/155844731-13a82e4e-f74e-47a9-a677-7c696c731169.png)
 
 ## Install
+
+### Packer
+
+> NOTE requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
+
 ```lua
 use {
-  "AckslD/nvim-gfold.lua",
+  "npenkov/nvim-gfold.lua",
   config = function()
     require('gfold').setup()
   end,
 }
 ```
 
+### LazyVim
+
+~/.config/nvim/lua/plugins/nvim-gfold.lua
+
+```lua
+return {
+  "npenkov/nvim-gfold.lua",
+  branch = "feature/unpulled",
+  opts = {
+    cwd = "~/src/oss",
+  },
+  keys = {
+    {
+      "<leader>fs",
+      function()
+        require("gfold").pick_repo()
+      end,
+      desc = "Choose repo",
+    },
+  },
+}
+```
+
 ## Config
+
 Pass a table to `require('gfold').setup()`.
 The following are the default values:
+
 ```lua
 {
   -- base directory to look for repos
@@ -36,6 +68,9 @@ The following are the default values:
 
   -- if true, no error is shown if the call to gfold fails
   no_error = false,
+
+	-- timeout for the call to gfold
+	timeout = 3000,
 
   -- What symbols to use, for both picker and status
   status_symbols = {
@@ -99,29 +134,37 @@ The following are the default values:
 ```
 
 ## Usage
+
 ### Picker
+
 To pick a repo:
+
 ```vim
 :lua require('gfold').pick_repo()
 ```
 
 Optionally you can filter the repos you want to show by including a condition callback.
 For example:
+
 ```lua
 require('gfold').pick_repo(function(repo)
   return repo.status ~= 'clean'
 end)
 ```
-which would only include non-clean repos in the picker. `repo` is a table with the keys:
-* `status`
-* `path`
-* `remote`
-* `user`
 
+which would only include non-clean repos in the picker. `repo` is a table with the keys:
+
+- `status`
+- `path`
+- `remote`
+- `user`
 
 ### Statusline
+
 #### Lualine
+
 To use `lualine` you can simply do eg:
+
 ```lua
 require('lualine').setup({
   ...
@@ -139,17 +182,25 @@ require('lualine').setup({
 ```
 
 #### Others
+
 For other statuslines you can call `require('gfold').get_summary` which returns a table of the form:
+
 ```lua
 {
   unclean = <int>,
   clean = <int>,
   bare = <int>,
   unpushed = <int>,
+  unpulled = <int>,
 }
 ```
+
 which you can use to format a summary to your liking.
 
 NOTE that `get_summary` does not update the current summary (ie does not trigger `gfold`), it just looks up the
 current known information. This means `get_summary` is a quick function and you can easily call it often.
-Instead, `nvim-gfold` will continuously update this information in the background, see [settings](https://github.com/AckslD/nvim-gfold.lua/tree/main/lua/gfold/settings.lua) for more information.
+Instead, `nvim-gfold` will continuously update this information in the background, see [settings](https://github.com/npenkov/nvim-gfold.lua/tree/main/lua/gfold/settings.lua) for more information.
+
+## Credits
+
+Based on [AckslD/nvim-gfold](https://github.com/AckslD/nvim-gfold.lua)
