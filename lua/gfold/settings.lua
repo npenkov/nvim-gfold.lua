@@ -58,10 +58,12 @@ return {
 			unclean = { fg = "#fb4934" },
 			unpushed = { fg = "#fe8019" },
 			bare = { fg = "#fabd2f" },
+			unpulled = { fg = "#aabd2f" },
 		},
 
 		-- In which order to show the components of the summary
 		order = {
+			"unpulled",
 			"clean",
 			"unclean",
 			"unpushed",
