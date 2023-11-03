@@ -22,7 +22,15 @@ local get_repos = function(callback, condition)
 				filtered[#filtered + 1] = v
 			end
 		end
-		return filtered
+		local sorted = {}
+		for _, st in pairs(settings.status.order) do
+			for _, v in pairs(filtered) do
+				if v.status == st then
+					sorted[#sorted + 1] = v
+				end
+			end
+		end
+		return sorted
 	end
 	local job = Job:new({
 		command = "gfold",
