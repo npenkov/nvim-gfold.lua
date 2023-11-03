@@ -12,13 +12,17 @@ local get_repos = function(callback, condition)
 			return {}
 		end
 		local ret = vim.fn.json_decode(rawJson)
+		local filtered = {}
 		for _, v in pairs(ret) do
 			v.status = v.status:lower()
 			v.path = v.parent .. "/" .. v.name
 			v.remote = v.url
 			v.user = v.email
+			if condition == nil or condition(v) then
+				filtered[#filtered + 1] = v
+			end
 		end
-		return ret
+		return filtered
 	end
 	local job = Job:new({
 		command = "gfold",
