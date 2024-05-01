@@ -159,6 +159,28 @@ which would only include non-clean repos in the picker. `repo` is a table with t
 - `remote`
 - `user`
 
+Another example for unpulled repos and a customer function `on_select`:
+
+```lua
+    {
+      "<leader>fsU",
+      function()
+        require("gfold").pick_repo_and(function(repo)
+          return repo.status == "unpulled"
+        end, function(repo, idx)
+          if repo then
+            print("Selected " .. repo.path .. " -> " .. idx)
+          end
+          local bdir = repo.path
+          local tmux = require("harpoon.tmux")
+          tmux.sendCommand(99, "cd " .. bdir .. "; nvim .; \n")
+        end)
+      end,
+      desc = "Choose repo (unpulled)",
+    },
+```
+which uses harpoon.tmux to create a new session and run `nvim` in it.
+
 ### Statusline
 
 #### Lualine
